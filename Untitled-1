@@ -1,0 +1,9 @@
+passing a fetch request to the api url
+indicates that it will be patch 
+it will edit info on the database
+indicates what type the content will be 
+indicates what type you are accepting
+when you are making a post request
+when you are getting data from the api
+json type
+key/value pair
