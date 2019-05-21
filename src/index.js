@@ -2,6 +2,7 @@ const addBtn = document.querySelector('#new-toy-btn')
 const toyForm = document.querySelector('.container')
 const toyCollection = document.getElementById('toy-collection');
 let addToy = false
+let element = null;
 
 // YOUR CODE HERE
 
@@ -27,6 +28,11 @@ function displayToys(){
   .then(resp => resp.json())
   .then(data => 
     data.forEach(toy => {
+      createElements(toy)
+    })   
+)}
+
+function createElements(toy){
       let div = document.createElement('div');
       div.className = 'card';
       let h2 = document.createElement('h2');
@@ -43,21 +49,27 @@ function displayToys(){
       button.innerText = "Like <3";
       button.className = "like-btn";
       button.addEventListener('click',function(){
-        like(toy.id, toy.likes)
+        element = p;
+        beforeLike(toy)
       });
       div.appendChild(button);
       toyCollection.appendChild(div);
+}
 
+function beforeLike(toy){
+  fetch(`http://localhost:3000/toys/${toy.id}`)
+  .then(resp => resp.json())
+  .then(data => {
+    like(data)
+  })
+}
 
-    })   
-)}
-
-function like(id, likes){
-  let parsed = parseInt(likes);
+function like(toy){
+  let parsed = parseInt(toy.likes);
   //console.log(parsed);
   let newNumberOfLikes = parsed + 1
   //console.log(newNumberOfLikes);
-  fetch(`http://localhost:3000/toys/${id}`,{
+  fetch(`http://localhost:3000/toys/${toy.id}`,{
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -69,10 +81,8 @@ function like(id, likes){
   })
   .then(resp => resp.json())
   .then(data => {
-     let likes = document.getElementById('likes');
-     likes.innerText = data.likes;
+     element.innerText = newNumberOfLikes;
      //console.log(data);
-   
   })
 }
 
@@ -93,7 +103,9 @@ function createToy(e){
     })
   })
   .then(resp => resp.json())
-  .then(data => console.log(data))
+  .then(data => {
+    createElements(data)
+  })
 }
 
 
